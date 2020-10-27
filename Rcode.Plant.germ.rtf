@@ -1,0 +1,192 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red10\green30\blue148;\red151\green33\blue19;\red182\green137\blue34;
+\red79\green79\blue79;}
+\margl1440\margr1440\vieww13460\viewh10980\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7280\tx7840\tx8400\tx8960\tx9520\tx10080\tx10640\tx11200\tx11760\tx12320\tx12880\tx13440\tx14000\tx14560\tx15120\tx15680\tx16240\tx16800\tx17360\tx17920\tx18480\tx19040\tx19600\tx20160\tx20720\tx21280\tx21840\tx22400\tx22960\tx23520\tx24080\tx24640\tx25200\tx25760\tx26320\tx26880\tx27440\tx28000\tx28560\tx29120\tx29680\tx30240\tx30800\tx31360\tx31920\tx32480\tx33040\tx33600\tx34160\tx34720\tx35280\tx35840\li80\fi-80\ql\qnatural\pardirnatural
+
+\f0\fs22 \cf2 setwd(\cf3 ""\cf2 )\cf0 \
+\cf2 library(\cf0 MuMIn\cf2 )\cf0 \
+\cf2 library(\cf0 betareg\cf2 )\cf0 \
+Plant.germ \cf2 <-\cf0  \cf2 as.data.frame(read.delim(\cf0 file\cf2 =\cf3 "Plant.germ.txt"\cf2 ,\cf0  header\cf2 =\cf4 TRUE\cf2 ,\cf0  sep\cf2 =\cf3 "\\t"\cf2 ));\cf0 \
+\cf5 #this tells you the names of the colums in your data base\
+\cf2 names(\cf0 Plant.germ\cf2 )\cf0 \
+\
+\cf5 #lists all of the names of the plants\
+\cf2 unique(\cf0 Plant.germ\cf2 $\cf0 Plant\cf2 )\cf5 \
+\cf0 \
+\cf5 #get a separate data set for only Olapa\
+\cf0 CHETR \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "CHETR"\cf2 )\cf0 \
+\
+\cf5 #get a separate data set for only Oha kepau\
+\cf0 CLEHA \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "CLEHA"\cf2 )\cf0 \
+\
+\cf5 #get a separate data set for only Pilo\cf0 \
+COPRH \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "COPRH"\cf2 )\cf0 \
+\
+\cf5 #get a separate data set for only Mamaki\
+\cf0 PIPAL \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "PIPAL"\cf2 )\cf0 \
+\
+\cf5 #get a separate data set for only Hoawa\
+\cf0 PITHO \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "PITHO"\cf2 )\cf0 \
+\
+\cf5 #get a separate data set for only Ohelo\
+\cf0 VACRE \cf2 <-\cf0  \cf2 subset(\cf0 Plant.germ\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "VACRE"\cf2 )\cf0 \
+\
+\cf5 #OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 CHETRgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 CHETR\cf2 $\cf0 germsucc\cf2 ~\cf0  CHETR\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 CHETR\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 CHETRgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 CHETRgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 CHETRgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 CHETRgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 CHETRgerm.AIC\cf2 ,\cf3 "GERM.CHETR.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 "S"\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients-\
+\cf0 average.CHETRgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 CHETRgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 CHETRgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+CHETRgerm.trt \cf2 <-\cf0  CHETR\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.CHETRgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 CHETRgerm.trt\cf2 ))\cf0 \
+pred.avg.CHETRgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.CHETRgerm\cf2 ,\cf0  newdata.CHETRgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.CHETRgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.CHETRgerm\cf2 ,\cf0 pred.avg.CHETRgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.CHETRgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.CHETRgerm\cf2 ,\cf3 "GERM.results.CHETR.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 CLEHAgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 CLEHA\cf2 $\cf0 germsucc\cf2 ~\cf0  CLEHA\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 CLEHA\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 CLEHAgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 CLEHAgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 CLEHAgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 CLEHAgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 CLEHAgerm.AIC\cf2 ,\cf3 "GERM.CLEHA.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients-\
+\cf0 average.CLEHAgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 CLEHAgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 CLEHAgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+CLEHAgerm.trt \cf2 <-\cf0  CLEHA\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.CLEHAgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 CLEHAgerm.trt\cf2 ))\cf0 \
+pred.avg.CLEHAgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.CLEHAgerm\cf2 ,\cf0  newdata.CLEHAgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.CLEHAgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.CLEHAgerm\cf2 ,\cf0 pred.avg.CLEHAgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.CLEHAgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.CLEHAgerm\cf2 ,\cf3 "GERM.results.CLEHA.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 COPRHgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 COPRH\cf2 $\cf0 germsucc\cf2 ~\cf0  COPRH\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 COPRH\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 COPRHgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 COPRHgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 COPRHgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 COPRHgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 COPRHgerm.AIC\cf2 ,\cf3 "GERM.COPRH.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients-\
+\cf0 average.COPRHgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 COPRHgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 COPRHgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+COPRHgerm.trt \cf2 <-\cf0  COPRH\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.COPRHgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 COPRHgerm.trt\cf2 ))\cf0 \
+pred.avg.COPRHgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.COPRHgerm\cf2 ,\cf0  newdata.COPRHgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.COPRHgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.COPRHgerm\cf2 ,\cf0 pred.avg.COPRHgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.COPRHgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.COPRHgerm\cf2 ,\cf3 "GERM.results.COPRH.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 PIPALgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 PIPAL\cf2 $\cf0 germsucc\cf2 ~\cf0  PIPAL\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 PIPAL\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 PIPALgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 PIPALgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 PIPALgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 PIPALgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 PIPALgerm.AIC\cf2 ,\cf3 "GERM.PIPAL.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients-\cf0 \
+average.PIPALgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 PIPALgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 PIPALgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+PIPALgerm.trt \cf2 <-\cf0  PIPAL\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.PIPALgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 PIPALgerm.trt\cf2 ))\cf0 \
+pred.avg.PIPALgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.PIPALgerm\cf2 ,\cf0  newdata.PIPALgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.PIPALgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.PIPALgerm\cf2 ,\cf0 pred.avg.PIPALgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.PIPALgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.PIPALgerm\cf2 ,\cf3 "GERM.results.PIPAL.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 PITHOgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 PITHO\cf2 $\cf0 germsucc\cf2 ~\cf0  PITHO\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 PITHO\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 PITHOgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 PITHOgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 PITHOgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 PITHOgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 PITHOgerm.AIC\cf2 ,\cf3 "GERM.PITHO.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients- \
+\cf0 average.PITHOgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 PITHOgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 PITHOgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+PITHOgerm.trt \cf2 <-\cf0  PITHO\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.PITHOgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 PITHOgerm.trt\cf2 ))\cf0 \
+pred.avg.PITHOgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.PITHOgerm\cf2 ,\cf0  newdata.PITHOgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.PITHOgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.PITHOgerm\cf2 ,\cf0 pred.avg.PITHOgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.PITHOgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.PITHOgerm\cf2 ,\cf3 "GERM.results.PITHO.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO\
+\cf0 \
+\cf5 #regression with variables in the order that they'll appear in the AIC table.\
+\cf0 VACREgerm.glm \cf2 <-\cf0  \cf2 glm(\cf0 VACRE\cf2 $\cf0 germsucc\cf2 ~\cf0  VACRE\cf2 $\cf0 trt\cf2 ,\cf0 weights\cf2 =\cf0 VACRE\cf2 $\cf0 planted\cf2 )\cf0 \
+\cf5 #stats for the regression\
+\cf2 summary(\cf0 VACREgerm.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 VACREgerm.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 VACREgerm.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 VACREgerm.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 VACREgerm.AIC\cf2 ,\cf3 "GERM.VACRE.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients-\
+\cf0 average.VACREgerm \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 VACREgerm.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 VACREgerm.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+VACREgerm.trt \cf2 <-\cf0  VACRE\cf2 $\cf0 trt\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors\
+\cf0 newdata.VACREgerm \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 VACREgerm.trt\cf2 ))\cf0 \
+pred.avg.VACREgerm \cf2 <-\cf0  \cf2 predict(\cf0 average.VACREgerm\cf2 ,\cf0  newdata.VACREgerm\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.VACREgerm \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.VACREgerm\cf2 ,\cf0 pred.avg.VACREgerm\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.VACREgerm\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.VACREgerm\cf2 ,\cf3 "GERM.results.VACRE.txt"\cf2 ,\cf0 sep\cf2 =\cf3 " "\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+}

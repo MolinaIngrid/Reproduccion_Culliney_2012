@@ -1,0 +1,459 @@
+{\rtf1\ansi\ansicpg1252\cocoartf949\cocoasubrtf540
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red10\green30\blue148;\red151\green33\blue19;\red182\green137\blue34;
+\red79\green79\blue79;}
+\margl1440\margr1440\vieww25100\viewh15040\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\tx7280\tx7840\tx8400\tx8960\tx9520\tx10080\tx10640\tx11200\tx11760\tx12320\tx12880\tx13440\tx14000\tx14560\tx15120\tx15680\tx16240\tx16800\tx17360\tx17920\tx18480\tx19040\tx19600\tx20160\tx20720\tx21280\tx21840\tx22400\tx22960\tx23520\tx24080\tx24640\tx25200\tx25760\tx26320\tx26880\tx27440\tx28000\tx28560\tx29120\tx29680\tx30240\tx30800\tx31360\tx31920\tx32480\tx33040\tx33600\tx34160\tx34720\tx35280\tx35840\li80\fi-80\ql\qnatural\pardirnatural
+
+\f0\fs22 \cf2 setwd(\cf3 ""\cf2 )\cf0 \
+\cf2 library(\cf0 MuMIn\cf2 )\cf0 \
+\cf2 library(\cf0 betareg\cf2 )\cf0 \
+Alala.carry \cf2 <-\cf0  \cf2 as.data.frame(read.delim(\cf0 file\cf2 =\cf3 "Alala.carry.data.txt"\cf2 ,\cf0  header\cf2 =\cf4 TRUE\cf2 ,\cf0  sep\cf2 =\cf3 "\\t"\cf2 ));\cf0 \
+\cf5 #this tells you the names of the colums in your data base\cf0 \
+\cf2 names(\cf0 Alala.carry\cf2 )\cf0 \
+\cf5 #lists all of the names of the plants\cf0 \
+\cf2 unique(\cf0 Alala.carry\cf2 $\cf0 Plant\cf2 )\cf0 \
+\
+\cf5 #OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA OLAPA\
+\cf0 \
+\cf5 #subsetting for olapa; create a new file to work with\cf0 \
+CHETR \cf2 <-\cf0  \cf2 subset(\cf0 Alala.carry\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "CHETR"\cf2 )\cf0 \
+\
+\cf5 #this is the actual regression; the order that this is in, is the order of the variables in the AIC table\cf0 \
+CHETR.glm \cf2 <-\cf0  \cf2 glm(\cf0 CHETR\cf2 $\cf0 carries\cf2 ~\cf0  CHETR\cf2 $\cf0 Sex \cf2 +\cf0  CHETR\cf2 $\cf0 Age\cf2 ,\cf0 weights\cf2 =\cf0 CHETR\cf2 $\cf0 given\cf2 )\cf0 \
+\cf5 #this gives you your typical stats\cf0 \
+\cf2 summary(\cf0 CHETR.glm\cf2 )\cf0 \
+\
+\cf5 #getting AIC tables and coefficients\cf0 \
+CHETR.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 CHETR.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 CHETR.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 CHETR.AIC\cf2 ,\cf3 "CARRY.CHETR.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 "S"\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+\cf0 average.CHETR \cf2 <-\cf0  \cf2 model.avg(get.models(\cf0 CHETR.AIC\cf2 ,\cf0  \cf2 seq(nrow(\cf0 CHETR.AIC\cf2 ))),\cf0  method\cf2 =\cf3 "NA"\cf2 )\cf0 \
+CHETR.Age \cf2 <-\cf0  CHETR\cf2 $\cf0 Age\
+CHETR.Sex \cf2 <-\cf0  CHETR\cf2 $\cf0 Sex\
+\
+\cf5 #this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+\cf0 newdata.CHETR \cf2 <-\cf0  \cf2 as.data.frame(cbind(\cf0 CHETR.Age\cf2 ,\cf0 CHETR.Sex\cf2 ))\cf0 \
+pred.avg.CHETR \cf2 <-\cf0  \cf2 predict(\cf0 average.CHETR\cf2 ,\cf0  newdata.CHETR\cf2 ,\cf0 se.fit\cf2 =\cf4 TRUE\cf2 ,\cf0  type\cf2 =\cf3 "response"\cf2 )\cf0 \
+results.CHETR \cf2 <-\cf0  \cf2 unique(cbind(\cf0 newdata.CHETR\cf2 ,\cf0 pred.avg.CHETR\cf2 $\cf0 fit\cf2 ,\cf0 pred.avg.CHETR\cf2 $\cf0 se.fit\cf2 ))\cf0 \
+\
+\cf5 #This writes a text file with the averaged estimates results that you can read into excel\
+\cf2 write.table(\cf0 results.CHETR\cf2 ,\cf3 "CARRY.results.CHETR.txt"\cf2 ,\cf0 sep\cf2 =\cf3 "S"\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU\
+\cf0 \
+\cf5 #subsetting for olapa; create a new file to work with\
+\cf0 CLEHA \cf2 <-\cf0  \cf2 subset(\cf0 Alala.carry\cf2 ,\cf0  Plant\cf2 ==\cf0  \cf3 "CLEHA"\cf2 )\cf0 \
+\
+\cf5 #this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+\cf0 CLEHA.glm \cf2 <-\cf0  \cf2 glm(\cf0 CLEHA\cf2 $\cf0 carries\cf2 ~\cf0  CLEHA\cf2 $\cf0 Sex \cf2 +\cf0  CLEHA\cf2 $\cf0 Age\cf2 ,\cf0 weights\cf2 =\cf0 CLEHA\cf2 $\cf0 given\cf2 )\cf0 \
+\cf5 #this gives you your typical stats\
+\cf2 summary(\cf0 CLEHA.glm\cf2 )\cf5 \
+\cf0 \
+\cf5 #getting AIC tables and coefficients\
+\cf0 CLEHA.AIC \cf2 <-\cf0  \cf2 dredge(\cf0 CLEHA.glm\cf2 )\cf0 \
+\cf5 #please show me those AIC values\
+\cf0 CLEHA.AIC\
+\cf5 #writes a text file from the AIC table which can be read into excel\
+\cf2 write.table(\cf0 CLEHA.AIC\cf2 ,\cf3 "CARRY.CLEHA.AIC.txt"\cf2 ,\cf0 sep\cf2 =\cf3 "S"\cf2 ,\cf0  col.names\cf2 =\cf4 TRUE\cf2 )\cf0 \
+\
+\cf5 #this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\cf0 \
+average.CLEHA <- model.avg(get.models(CLEHA.AIC, seq(nrow(CLEHA.AIC))), method="NA")\
+CLEHA.Age <- CLEHA$Age\
+CLEHA.Sex <- CLEHA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.CLEHA <- as.data.frame(cbind(CLEHA.Age,CLEHA.Sex))\
+pred.avg.CLEHA <- predict(average.CLEHA, newdata.CLEHA,se.fit=TRUE, type="response")\
+results.CLEHA <- unique(cbind(newdata.CLEHA,pred.avg.CLEHA$fit,pred.avg.CLEHA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.CLEHA,"CARRY.results.CLEHA.txt",sep="S", col.names=TRUE)\
+\
+#PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO PILO\
+\
+#subsetting for just pilo; create a new file to work with\
+COPRH <- subset(Alala.carry, Plant== "COPRH")\
+\
+summary(COPRH$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+COPRH.glm <- glm(COPRH$carries~ COPRH$Sex + COPRH$Age,weights=COPRH$given)\
+\
+#this gives you your typical stats\
+summary(COPRH.glm)\
+\
+#calculates AIC tables and coefficients\
+COPRH.AIC <- dredge(COPRH.glm)\
+#please show me those AIC values\
+COPRH.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(COPRH.AIC,"CARRY.COPRH.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.COPRH <- model.avg(get.models(COPRH.AIC, seq(nrow(COPRH.AIC))), method="NA")\
+COPRH.Age <- COPRH$Age\
+COPRH.Sex <- COPRH$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.COPRH <- as.data.frame(cbind(COPRH.Age,COPRH.Sex))\
+pred.avg.COPRH <- predict(average.COPRH, newdata.COPRH,se.fit=TRUE, type="response")\
+results.COPRH <- unique(cbind(newdata.COPRH,pred.avg.COPRH$fit,pred.avg.COPRH$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.COPRH,"CARRY.results.COPRH.txt",sep="S", col.names=TRUE)\
+\
+#KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU KAWAU\
+\
+#subsetting for just kawau; create a new file to work with\
+ILEAN <- subset(Alala.carry, Plant== "ILEAN")\
+\
+summary(ILEAN$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+ILEAN.glm <- glm(ILEAN$carries~ ILEAN$Sex + ILEAN$Age,weights=ILEAN$given)\
+\
+#this gives you your typical stats\
+summary(ILEAN.glm)\
+\
+#getting AIC tables and coefficients\
+ILEAN.AIC <- dredge(ILEAN.glm)\
+#please show me those AIC values\
+ILEAN.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(ILEAN.AIC,"CARRY.ILEAN.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.ILEAN <- model.avg(get.models(ILEAN.AIC, seq(nrow(ILEAN.AIC))), method="NA")\
+ILEAN.Age <- ILEAN$Age\
+ILEAN.Sex <- ILEAN$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.ILEAN <- as.data.frame(cbind(ILEAN.Age,ILEAN.Sex))\
+pred.avg.ILEAN <- predict(average.ILEAN, newdata.ILEAN,se.fit=TRUE, type="response")\
+results.ILEAN <- unique(cbind(newdata.ILEAN,pred.avg.ILEAN$fit,pred.avg.ILEAN$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.ILEAN,"CARRY.results.ILEAN.txt",sep="S", col.names=TRUE)\
+\
+#NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO NAIO\
+\
+#subsetting for just naio; create a new file to work with\
+MYOSA <- subset(Alala.carry, Plant== "MYOSA")\
+\
+summary(MYOSA$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+MYOSA.glm <- glm(MYOSA$carries~ MYOSA$Sex + MYOSA$Age,weights=MYOSA$given)\
+\
+#this gives you your typical stats\
+summary(MYOSA.glm)\
+\
+#getting AIC tables and coefficients\
+MYOSA.AIC <- dredge(MYOSA.glm)\
+#please show me those AIC values\
+MYOSA.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(MYOSA.AIC,"CARRY.MYOSA.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.MYOSA <- model.avg(get.models(MYOSA.AIC, seq(nrow(MYOSA.AIC))), method="NA")\
+MYOSA.Age <- MYOSA$Age\
+MYOSA.Sex <- MYOSA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.MYOSA <- as.data.frame(cbind(MYOSA.Age,MYOSA.Sex))\
+pred.avg.MYOSA <- predict(average.MYOSA, newdata.MYOSA,se.fit=TRUE, type="response")\
+results.MYOSA <- unique(cbind(newdata.MYOSA,pred.avg.MYOSA$fit,pred.avg.MYOSA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.MYOSA,"CARRY.results.MYOSA.txt",sep="S", col.names=TRUE)\
+\
+#KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA KOLEA\
+\
+#subsetting for just kolea; create a new file to work with\
+MYRLA <- subset(Alala.carry, Plant== "MYRLA")\
+\
+summary(MYRLA$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+MYRLA.glm <- glm(MYRLA$carries~ MYRLA$Sex + MYRLA$Age,weights=MYRLA$given)\
+\
+#this gives you your typical stats\
+summary(MYRLA.glm)\
+\
+#getting AIC tables and coefficients\
+MYRLA.AIC <- dredge(MYRLA.glm)\
+#please show me those AIC values\
+MYRLA.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(MYRLA.AIC,"CARRY.MYRLA.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.MYRLA <- model.avg(get.models(MYRLA.AIC, seq(nrow(MYRLA.AIC))), method="NA")\
+MYRLA.Age <- MYRLA$Age\
+MYRLA.Sex <- MYRLA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.MYRLA <- as.data.frame(cbind(MYRLA.Age, MYRLA.Sex))\
+pred.avg.MYRLA <- predict(average.MYRLA, newdata.MYRLA,se.fit=TRUE, type="response")\
+results.MYRLA <- unique(cbind(newdata.MYRLA,pred.avg.MYRLA$fit,pred.avg.MYRLA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.MYRLA,"CARRY.results.MYRLA.txt",sep="S", col.names=TRUE)\
+\
+#MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI MAMAKI\
+\
+#subsetting for just mamaki; create a new file to work with\
+PIPAL <- subset(Alala.carry, Plant== "PIPAL")\
+\
+summary(PIPAL$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+PIPAL.glm <- glm(PIPAL$carries~ PIPAL$Sex + PIPAL$Age,weights=PIPAL$given)\
+\
+#this gives you your typical stats\
+summary(PIPAL.glm)\
+\
+#getting AIC tables and coefficients\
+PIPAL.AIC <- dredge(PIPAL.glm)\
+#please show me those AIC values\
+PIPAL.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(PIPAL.AIC,"CARRY.PIPAL.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.PIPAL <- model.avg(get.models(PIPAL.AIC, seq(nrow(PIPAL.AIC))), method="NA")\
+PIPAL.Age <- PIPAL$Age\
+PIPAL.Sex <- PIPAL$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.PIPAL <- as.data.frame(cbind(PIPAL.Age, PIPAL.Sex))\
+pred.avg.PIPAL <- predict(average.PIPAL, newdata.PIPAL,se.fit=TRUE, type="response")\
+results.PIPAL <- unique(cbind(newdata.PIPAL,pred.avg.PIPAL$fit,pred.avg.PIPAL$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.PIPAL,"CARRY.results.PIPAL.txt",sep="S", col.names=TRUE)\
+\
+#HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA\
+\
+#subsetting for just hoawa; create a new file to work with\
+PITHO <- subset(Alala.carry, Plant== "PITHO")\
+\
+summary(PITHO$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+PITHO.glm <- glm(PITHO$carries~ PITHO$Sex + PITHO$Age,weights=PITHO$given)\
+\
+#this gives you your typical stats\
+summary(PITHO.glm)\
+\
+#getting AIC tables and coefficients\
+PITHO.AIC <- dredge(PITHO.glm)\
+#please show me those AIC values\
+PITHO.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(PITHO.AIC,"CARRY.PITHO.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.PITHO <- model.avg(get.models(PITHO.AIC, seq(nrow(PITHO.AIC))), method="NA")\
+PITHO.Age <- PITHO$Age\
+PITHO.Sex <- PITHO$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.PITHO <- as.data.frame(cbind(PITHO.Age,PITHO.Sex))\
+pred.avg.PITHO <- predict(average.PITHO, newdata.PITHO,se.fit=TRUE, type="response")\
+results.PITHO <- unique(cbind(newdata.PITHO,pred.avg.PITHO$fit,pred.avg.PITHO$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.PITHO,"CARRY.results.PITHO.txt",sep="S", col.names=TRUE)\
+\
+#HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE HALAPEPE\
+\
+#subsetting for just halapepe; create a new file to work with\
+PLEHA <- subset(Alala.carry, Plant== "PLEHA")\
+\
+summary(PLEHA$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+PLEHA.glm <- glm(PLEHA$carries~ PLEHA$Sex + PLEHA$Age,weights=PLEHA$given)\
+\
+#this gives you your typical stats\
+summary(PLEHA.glm)\
+\
+#getting AIC tables and coefficients\
+PLEHA.AIC <- dredge(PLEHA.glm)\
+#please show me those AIC values\
+PLEHA.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(PLEHA.AIC,"CARRY.PLEHA.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.PLEHA <- model.avg(get.models(PLEHA.AIC, seq(nrow(PLEHA.AIC))), method="NA")\
+PLEHA.Age <- PLEHA$Age\
+PLEHA.Sex <- PLEHA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.PLEHA <- as.data.frame(cbind(PLEHA.Age,PLEHA.Sex))\
+pred.avg.PLEHA <- predict(average.PLEHA, newdata.PLEHA,se.fit=TRUE, type="response")\
+results.PLEHA <- unique(cbind(newdata.PLEHA,pred.avg.PLEHA$fit,pred.avg.PLEHA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.PLEHA,"CARRY.results.PLEHA.txt",sep="S", col.names=TRUE)\
+\
+#RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU RIPELOULU\
+\
+#subsetting for just ripeloulu; create a new file to work with\
+PRISCb <- subset(Alala.carry, Plant== "PRISCb")\
+\
+summary(PRISCb$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+PRISCb.glm <- glm(PRISCb$carries~ PRISCb$Sex + PRISCb$Age,weights=PRISCb$given)\
+\
+#this gives you your typical stats\
+summary(PRISCb.glm)\
+\
+#getting AIC tables and coefficients\
+PRISCb.AIC <- dredge(PRISCb.glm)\
+#please show me those AIC values\
+PRISCb.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(PRISCb.AIC,"CARRY.PRISCb.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.PRISCb <- model.avg(get.models(PRISCb.AIC, seq(nrow(PRISCb.AIC))), method="NA")\
+PRISCb.Age <- PRISCb$Age\
+PRISCb.Sex <- PRISCb$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.PRISCb <- as.data.frame(cbind(PRISCb.Age,PRISCb.Sex))\
+pred.avg.PRISCb <- predict(average.PRISCb, newdata.PRISCb,se.fit=TRUE, type="response")\
+results.PRISCb <- unique(cbind(newdata.PRISCb,pred.avg.PRISCb$fit,pred.avg.PRISCb$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.PRISCb,"CARRY.results.PRISCb.txt",sep="S", col.names=TRUE)\
+\
+#GREENLOULU GREENLOULU GREENLOULU GREENLOULU GREENLOULU GREENLOULU GREENLOULU GREENLOULU GREENLOULU\
+\
+#subsetting for just greenloulu; create a new file to work with\
+PRISCg <- subset(Alala.carry, Plant== "PRISCg")\
+\
+summary(PRISCg$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+PRISCg.glm <- glm(PRISCg$carries~ PRISCg$Sex + PRISCg$Age,weights=PRISCg$given)\
+\
+#this gives you your typical stats\
+summary(PRISCg.glm)\
+\
+#getting AIC tables and coefficients\
+PRISCg.AIC <- dredge(PRISCg.glm)\
+#please show me those AIC values\
+PRISCg.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(PRISCg.AIC,"CARRY.PRISCg.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.PRISCg <- model.avg(get.models(PRISCg.AIC, seq(nrow(PRISCg.AIC))), method="NA")\
+PRISCg.Age <- PRISCg$Age\
+PRISCg.Sex <- PRISCg$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.PRISCg <- as.data.frame(cbind(PRISCg.Age,PRISCg.Sex))\
+pred.avg.PRISCg <- predict(average.PRISCg, newdata.PRISCg,se.fit=TRUE, type="response")\
+results.PRISCg <- unique(cbind(newdata.PRISCg,pred.avg.PRISCg$fit,pred.avg.PRISCg$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.PRISCg,"CARRIES.results.PRISCg.txt",sep="S", col.names=TRUE)\
+\
+#PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE PUKIAWE\
+\
+#subsetting for pukiawe; create a new file to work with\
+STYTA <- subset(Alala.carry, Plant== "STYTA")\
+\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+STYTA.glm <- glm(STYTA$carries~ STYTA$Sex + STYTA$Age,weights=STYTA$given)\
+#this gives you your typical stats\
+summary(STYTA.glm)\
+\
+#getting AIC tables and coefficients\
+STYTA.AIC <- dredge(STYTA.glm)\
+#please show me those AIC values\
+STYTA.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(STYTA.AIC,"CARRY.STYTA.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.STYTA <- model.avg(get.models(STYTA.AIC, seq(nrow(STYTA.AIC))), method="NA")\
+STYTA.Age <- STYTA$Age\
+STYTA.Sex <- STYTA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.STYTA <- as.data.frame(cbind(STYTA.Age,STYTA.Sex))\
+pred.avg.STYTA <- predict(average.STYTA, newdata.STYTA,se.fit=TRUE, type="response")\
+results.STYTA <- unique(cbind(newdata.STYTA,pred.avg.STYTA$fit,pred.avg.STYTA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.STYTA,"CARRY.results.STYTA.txt",sep="S", col.names=TRUE)\
+\
+#OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA OHEMAUKA\
+\
+#subsetting for just ohemauka; create a new file to work with\
+TETHA <- subset(Alala.carry, Plant== "TETHA")\
+\
+summary(TETHA$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+TETHA.glm <- glm(TETHA$carries~ TETHA$Sex + TETHA$Age,weights=TETHA$given)\
+\
+#this gives you your typical stats\
+summary(TETHA.glm)\
+\
+#getting AIC tables and coefficients\
+TETHA.AIC <- dredge(TETHA.glm)\
+#please show me those AIC values\
+TETHA.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(TETHA.AIC,"CARRY.TETHA.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.TETHA <- model.avg(get.models(TETHA.AIC, seq(nrow(TETHA.AIC))), method="NA")\
+TETHA.Age <- TETHA$Age\
+TETHA.Sex <- TETHA$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.TETHA <- as.data.frame(cbind(TETHA.Age,TETHA.Sex))\
+pred.avg.TETHA <- predict(average.TETHA, newdata.TETHA,se.fit=TRUE, type="response")\
+results.TETHA <- unique(cbind(newdata.TETHA,pred.avg.TETHA$fit,pred.avg.TETHA$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.TETHA,"CARRY.results.TETHA.txt",sep="S", col.names=TRUE)\
+\
+#OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO OHELO\
+\
+#subsetting for just ohelo; create a new file to work with\
+VACRE <- subset(Alala.carry, Plant== "VACRE")\
+\
+summary(VACRE$carries)\
+#this is the actual regression; the order that this is in, is the order of the variables in the AIC table\
+VACRE.glm <- glm(VACRE$carries~ VACRE$Sex + VACRE$Age,weights=VACRE$given)\
+\
+#this gives you your typical stats\
+summary(VACRE.glm)\
+\
+#getting AIC tables and coefficients\
+VACRE.AIC <- dredge(VACRE.glm)\
+#please show me those AIC values\
+VACRE.AIC\
+#writes a text file from the AIC table which can be read into excel\
+write.table(VACRE.AIC,"CARRY.VACRE.AIC.txt",sep="S", col.names=TRUE)\
+\
+#this is to do model averaging and get model averaged estimates of each of the coefficients- remember, if the confidence interval bounds zero it does not matter!  Use these estimates for talking about the magnitude of age & sex effects\
+average.VACRE <- model.avg(get.models(VACRE.AIC, seq(nrow(VACRE.AIC))), method="NA")\
+VACRE.Age <- VACRE$Age\
+VACRE.Sex <- VACRE$Sex\
+\
+#this is to get those averaged model estimates with the standard errors, you can use a formula to estimate the confidence interval using the SE\
+newdata.VACRE <- as.data.frame(cbind(VACRE.Age,VACRE.Sex))\
+pred.avg.VACRE <- predict(average.VACRE, newdata.VACRE,se.fit=TRUE, type="response")\
+results.VACRE <- unique(cbind(newdata.VACRE,pred.avg.VACRE$fit,pred.avg.VACRE$se.fit))\
+\
+#This writes a text file with the averaged estimates results that you can read into excel\
+write.table(results.VACRE,"CARRY.results.VACRE.txt",sep="S", col.names=TRUE)\
+\
+}

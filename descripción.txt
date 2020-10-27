@@ -1,0 +1,46 @@
+Description
+Data.Alala.carry.txt is a tab-separated file containing raw data for bird carrying behavior.
+
+Column definitions:
+
+Name of each bird
+Sex (1 = male; 0 = female)
+Plant (scientific name using first three letters of genus and first two letters of species)
+Eaten (number of times each bird observed carrying that plant)
+Given (number of times each bird given that plant)
+Eats (proportion of times each bird observed carrying that plant)
+Age (0 = juvenile; 1 = adult)
+
+Data.Alala.eat.txt is a tab-separated file containing raw data for bird eating behavior.
+
+Column definitions:
+
+Name of each bird
+Sex (1 = male; 0 = female)
+Plant (scientific name using first three letters of genus and first two letters of species)
+Eaten (number of times each bird observed eating that plant)
+Given (number of times each bird given that plant)
+Eats (proportion of times each bird observed eating that plant)
+Age (0 = juvenile; 1 = adult)
+
+Data.Plant.germ.txt is a tab-separated file containing raw data for bird eating behavior.
+
+Column definitions:
+
+Rep (trial)
+Plant (scientific name using first three letters of genus and first two letters of species)
+Trt (treatment group)
+Trtnumb (numeric code for treatment group)
+germsucc (germination success)
+Planted (number of seeds planted)
+
+Rcode.Alala.carry.behavior.rtf is a rich text file containing R code to perform the carrying behavior analysis.
+
+Rcode.Alala.eat.behavior.rtf is a rich text file containing R code to perform the eating behavior analysis.
+
+Rcode.Plant.germ.rtf is a rich text file containing R code to perform the germinations success analysis.
+
+HISTORY
+04.08.2016
+ - 
+First online date, Posted date
