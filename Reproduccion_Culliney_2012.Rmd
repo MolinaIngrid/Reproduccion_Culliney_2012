@@ -45,7 +45,7 @@ Al cargar library(betareg) hubo un error puesto que hay que instalar primero el 
 ```{r}
 library(betareg)
 ```
-Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry
+Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry (***Se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt***)
 
 ```{r}
 Alala.carry <- as.data.frame(read.delim(file="Data.Alala.carry.txt", header=TRUE, sep="\t"))
@@ -56,39 +56,10 @@ unique(Alala.carry$Plant)
 ```
 
 
-##### Hacer un sub set para Olapa. 
-
-```{r}
-CHETR <- subset(Alala.carry, Plant== "CHETR")
-
-#Regresión; 
-CHETR.glm <- glm(CHETR$carries~ CHETR$Sex + CHETR$Age,weights=CHETR$given, na.action = na.fail)
-#Resumen de estadísticas
-summary(CHETR.glm)
-```
-
 ##### Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento "na.action". tuve que devolverme al glm y ***agregar glm(..., na.action = na.fail).***
 
-```{r}
-CHETR.AIC <- dredge(CHETR.glm)
-#Valores del AIC
-CHETR.AIC
-```
-##### Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. ***Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el "method"***
-```{r}
-average.CHETR <- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
-CHETR.Age <- CHETR$Age
-CHETR.Sex <- CHETR$Sex
-```
 
-##### Para obtener los modelos promediados con los errores estandar 
-```{r}
-newdata.CHETR <- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
-pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="response")
-results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
-```
-##### Archivo de texto 
-```{r}
+##### Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. ***Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el "method"*** así que lo eliminé.
 
-write.table(results.CHETR,"CARRY.results.CHETR.txt",sep="S", col.names=TRUE)
-```
+
+##### No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: ***Error in na.fail.default(list(`PITHO$germsucc` = c(0.428571429, 0.142857143, : missing values in object*** Esto sólo sucedió para PITHO.

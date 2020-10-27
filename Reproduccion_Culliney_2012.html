@@ -399,7 +399,7 @@ summary {
 <p>Al cargar library(betareg) hubo un error puesto que hay que instalar primero el paquete betareg <strong><em>esto no estaba especificado en el documento de word</em></strong> una vez instalado:</p>
 <pre class="r"><code>library(betareg)</code></pre>
 <pre><code>## Warning: package &#39;betareg&#39; was built under R version 3.6.3</code></pre>
-<p>Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry</p>
+<p>Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry (<strong><em>Se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt</em></strong>)</p>
 <pre class="r"><code>Alala.carry &lt;- as.data.frame(read.delim(file=&quot;Data.Alala.carry.txt&quot;, header=TRUE, sep=&quot;\t&quot;))</code></pre>
 <pre class="r"><code>names(Alala.carry)</code></pre>
 <pre><code>## [1] &quot;Name&quot;    &quot;Sex&quot;     &quot;Plant&quot;   &quot;carried&quot; &quot;given&quot;   &quot;carries&quot; &quot;Age&quot;</code></pre>
@@ -408,71 +408,14 @@ summary {
 ## [11] PRISCg STYTA  TETHA  VACRE 
 ## 14 Levels: CHETR CLEHA COPRH ILEAN MYOSA MYRLA PIPAL PITHO PLEHA ... VACRE</code></pre>
 </div>
-<div id="hacer-un-sub-set-para-olapa." class="section level5">
-<h5>Hacer un sub set para Olapa.</h5>
-<pre class="r"><code>CHETR &lt;- subset(Alala.carry, Plant== &quot;CHETR&quot;)
-
-#Regresión; 
-CHETR.glm &lt;- glm(CHETR$carries~ CHETR$Sex + CHETR$Age,weights=CHETR$given, na.action = na.fail)
-#Resumen de estadísticas
-summary(CHETR.glm)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = CHETR$carries ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
-##     na.action = na.fail)
-## 
-## Deviance Residuals: 
-##      Min        1Q    Median        3Q       Max  
-## -0.33872  -0.24657  -0.08755  -0.02584   2.24534  
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)   
-## (Intercept)  0.08468    0.02881   2.939  0.00483 **
-## CHETR$Sex   -0.05699    0.02907  -1.961  0.05507 . 
-## CHETR$Age   -0.02102    0.02986  -0.704  0.48453   
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for gaussian family taken to be 0.1787553)
-## 
-##     Null deviance: 10.3767  on 56  degrees of freedom
-## Residual deviance:  9.6528  on 54  degrees of freedom
-## AIC: -85.926
-## 
-## Number of Fisher Scoring iterations: 2</code></pre>
-</div>
 <div id="tablas-del-aic-y-sus-coeficientes.-aca-obtenia-un-error-porque-la-funcion-dredge-no-aceptaba-el-argumento-na.action.-tuve-que-devolverme-al-glm-y-agregar-glm-na.action-na.fail." class="section level5">
 <h5>Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento “na.action”. tuve que devolverme al glm y <strong><em>agregar glm(…, na.action = na.fail).</em></strong></h5>
-<pre class="r"><code>CHETR.AIC &lt;- dredge(CHETR.glm)</code></pre>
-<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
-<pre class="r"><code>#Valores del AIC
-CHETR.AIC</code></pre>
-<pre><code>## Global model call: glm(formula = CHETR$carries ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
-##     na.action = na.fail)
-## ---
-## Model selection table 
-##     (Int)  CHE$Age  CHE$Sex df logLik  AICc delta weight
-## 3 0.07042          -0.05433  3 46.702 -87.0  0.00  0.478
-## 1 0.04297                    2 44.902 -85.6  1.37  0.241
-## 4 0.08468 -0.02102 -0.05699  4 46.963 -85.2  1.80  0.195
-## 2 0.05120 -0.01340           3 45.003 -83.6  3.40  0.087
-## Models ranked by AICc(x)</code></pre>
 </div>
-<div id="para-promediar-el-modelo-y-obtener-los-estimados-promediados-del-modelo-para-cada-uno-de-los-coeficientes.-hubo-un-error-por-el-codigo-original-ya-que-la-funcion-model.avg-ha-tenido-cambios-y-no-requiere-especificar-el-method" class="section level5">
-<h5>Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. <strong><em>Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el “method”</em></strong></h5>
-<pre class="r"><code>average.CHETR &lt;- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
-CHETR.Age &lt;- CHETR$Age
-CHETR.Sex &lt;- CHETR$Sex</code></pre>
+<div id="para-promediar-el-modelo-y-obtener-los-estimados-promediados-del-modelo-para-cada-uno-de-los-coeficientes.-hubo-un-error-por-el-codigo-original-ya-que-la-funcion-model.avg-ha-tenido-cambios-y-no-requiere-especificar-el-method-asi-que-lo-elimine." class="section level5">
+<h5>Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. <strong><em>Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el “method”</em></strong> así que lo eliminé.</h5>
 </div>
-<div id="para-obtener-los-modelos-promediados-con-los-errores-estandar" class="section level5">
-<h5>Para obtener los modelos promediados con los errores estandar</h5>
-<pre class="r"><code>newdata.CHETR &lt;- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
-pred.avg.CHETR &lt;- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type=&quot;response&quot;)
-results.CHETR &lt;- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))</code></pre>
-</div>
-<div id="archivo-de-texto" class="section level5">
-<h5>Archivo de texto</h5>
-<pre class="r"><code>write.table(results.CHETR,&quot;CARRY.results.CHETR.txt&quot;,sep=&quot;S&quot;, col.names=TRUE)</code></pre>
+<div id="no-encontre-mas-errores-ni-obstaculos-en-la-parte-1-alala-carry-behavior-ni-en-la-parte-2-alala-eat-behavior-sin-embargo-al-llegar-a-la-parte-3-plant-germination-obtuve-un-error-error-in-na.fail.defaultlistpithogermsucc-c0.428571429-0.142857143-missing-values-in-object-esto-solo-sucedio-para-pitho." class="section level5">
+<h5>No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: <strong><em>Error in na.fail.default(list(<code>PITHO$germsucc</code> = c(0.428571429, 0.142857143, : missing values in object</em></strong> Esto sólo sucedió para PITHO.</h5>
 </div>
 </div>
 </div>
