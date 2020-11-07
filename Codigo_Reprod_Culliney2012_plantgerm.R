@@ -131,7 +131,7 @@ write.table(results.PIPALgerm,"GERM.results.PIPAL.txt",sep=" ", col.names=TRUE)
 #HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA HOAWA
 
 #regression with variables in the order that they'll appear in the AIC table.
-PITHOgerm.glm <- glm(PITHO$germsucc~ PITHO$trt,weights=PITHO$planted, na.action = na.fail)
+PITHOgerm.glm <- glm(PITHO$germsucc~ PITHO$trt,weights=PITHO$planted)
 #stats for the regression
 summary(PITHOgerm.glm)
 

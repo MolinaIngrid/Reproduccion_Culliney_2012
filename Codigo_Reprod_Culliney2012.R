@@ -1,3 +1,7 @@
+
+library(MuMIn)
+library(betareg)
+
 # primera parte culliney alala carry behavior
 Alala.carry <- as.data.frame(read.delim(file="Data.Alala.carry.txt", header=TRUE, sep="\t"))
 names(Alala.carry)
@@ -18,10 +22,13 @@ average.CHETR <- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
 CHETR.Age <- CHETR$Age
 CHETR.Sex <- CHETR$Sex
 
+
 # modelos promediadios con los errores estandar
 newdata.CHETR <- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
 pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="response")
 results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
+
+plot(results.CHETRgerm,CHETR.Sex)
 
 #archivo de texto 
 write.table(results.CHETR,"CARRY.results.CHETR.txt",sep="S", col.names=TRUE)
@@ -437,3 +444,4 @@ results.VACRE <- unique(cbind(newdata.VACRE,pred.avg.VACRE$fit,pred.avg.VACRE$se
 #This writes a text file with the averaged estimates results that you can read into excel
 write.table(results.VACRE,"CARRY.results.VACRE.txt",sep="S", col.names=TRUE)
 # THE END
+plot()

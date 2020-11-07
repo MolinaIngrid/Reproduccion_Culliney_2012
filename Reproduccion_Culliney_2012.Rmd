@@ -2,46 +2,59 @@
 title: "Reproducion_Culliney_2012"
 author: "Ingrid Molina Mora"
 date: "26/10/2020"
-output: html_document
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: vignette
+vignette: >
+  %\VignetteIndexEntry{Creating Pretty Documents from R Markdown - The Leonids Theme}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## **"Seed dispersal by a captive corvid: the role of the Alala (Corvus hawaiiensis) in shaping Hawaii’s plant communities"** 
+
+### *Proyecto de Reproducción de Artículo*
+### **Curso de Estrategias para la investigación reproducible II Semestre 2020 UCR** 
 
 
-# **Proyecto de Reproducción de Artículo**
-## Seed dispersal by a captive corvid: the role of the Alala
-## (Corvus hawaiiensis) in shaping Hawaii’s plant communities
+##### **1. ¿Qué es lo que investiga el artículo**
 
-<br><br><br><br>
+Este artículo de 2012 documentó el potencial del papel del cuervo hawaiano Alalas en el mantenimiento y restauración de los bosques de Hawáia través de la dispersión de semillas. 
 
-#### Curso de Estrategias para la investigación reproducible II Semestre 2020 UCR
+<div style="text-align: center">
 
-<br><br><br><br>
+![Impresión sobre madera, J. Medina](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/alala.jpg)
 
-##### **1** Este artículo de 2012 documentó el potencial del papel del cuervo hawaiano Alalas en el mantenimiento y restauración de los bosques de Hawáia través de la dispersión de semillas. 
+<div/>
+
+El ***objetivo*** era documentar el papel potencial del Alala en la restauración de los bosques Hawaianos.
 
 Usaron ensayos de alimentación con
-Alalas cautivos para determinar (1) el potencial de dispersión del Alala en cautiverio para las especies de plantas fructíferas nativas de Hawaii; (2) si la edad y el sexo de las aves influyen en las opciones de alimentación
-y dispersión de semillas; y (3) si la ingestión de Alala
+Alalas cautivos para determinar **(1)** el potencial de dispersión del Alala en cautiverio para las especies de plantas fructíferas nativas de Hawaii; **(2)** si la edad y el sexo de las aves influyen en las opciones de alimentación
+y dispersión de semillas; y **(3)** si la ingestión de Alala
 da como resultado una mejor germinación de las semillas, ya que el proceso digestivo del ave podría preparar químicamente semillas para su germinación.
 
-##### **2** ¿Qué parte del análisis se reprodujo y porqué?
+
+##### **2 ¿Qué parte del análisis se reprodujo y porqué?**
 
 reproduje las 3 partes del análisis porque en este caso el artículo brindaba un link a el set de datos y a tres documentos de word donde el código estaba bien explicado
 
-##### **3** Código y resultados 
+##### **3 Código y resultados** 
 
-##### ***Comportamiento de forrajeo y dispersión de semillas***
+ *Comportamiento de forrajeo y dispersión de semillas*
    -Cargo las librerías MuMIn  y Betareg
    
 ```{r}
 library(MuMIn)
 ```
 
-Al cargar library(betareg) hubo un error puesto que hay que instalar primero el paquete betareg ***esto no estaba especificado en el documento de word*** una vez instalado:
+Antes de cargar library(betareg)  hay que instalar primero el paquete betareg  una vez instalado:
 ```{r}
 library(betareg)
 ```
@@ -56,10 +69,29 @@ unique(Alala.carry$Plant)
 ```
 
 
-##### Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento "na.action". tuve que devolverme al glm y ***agregar glm(..., na.action = na.fail).***
+Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento "na.action". tuve que devolverme al glm y ***agregar glm(..., na.action = na.fail).***
 
 
-##### Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. ***Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el "method"*** así que lo eliminé.
+Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. ***Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el "method"*** así que lo eliminé.
 
 
-##### No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: ***Error in na.fail.default(list(`PITHO$germsucc` = c(0.428571429, 0.142857143, : missing values in object*** Esto sólo sucedió para PITHO.
+No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: ***Error in na.fail.default(list(`PITHO$germsucc` = c(0.428571429, 0.142857143, : missing values in object*** Esto sólo sucedió para PITHO.
+
+##### **4.** ¿Qué cosas están en los materiales suplementarios (i.e. código) que no están mencionadas en los métodos y son importantes para entender el análisis?
+
+##### **5.** ¿Qué cosas están en los métodos que no encontraron en el código?
+
+##### **6.** Características del artículo y/o materiales suplementarios que dificultaron la reproducción
+
+##### **7.** Características del artículo y/o materiales suplementarios que facilitaron la reproducción
+
+##### **8.** ¿Considera que el análisis de datos es reproducible? 
+
+Acá pueden acceder al 
+[Repositorio en github](https://github.com/MolinaIngrid/Reproduccion_Culliney_2012)
+
+*información de la sesión*
+```{r, echo=FALSE}
+sessionInfo()
+
+```
