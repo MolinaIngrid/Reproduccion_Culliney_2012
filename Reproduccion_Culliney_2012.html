@@ -222,12 +222,13 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="código-y-resultados" class="section level5">
 <h5><strong>3 Código y resultados</strong></h5>
-<p><em>Comportamiento de forrajeo y dispersión de semillas</em> -Cargo las librerías MuMIn y Betareg</p>
+<p>-Cargo las librerías MuMIn y Betareg</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(MuMIn)</a></code></pre></div>
 <p>Antes de cargar library(betareg) hay que instalar primero el paquete betareg una vez instalado:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(betareg)</a></code></pre></div>
 <pre><code>## Warning: package &#39;betareg&#39; was built under R version 3.6.3</code></pre>
-<p>Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry (<strong><em>Se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt</em></strong>)</p>
+<p>Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry</p>
+<p><em>Comportamiento de forrajeo y dispersión de semillas</em> (<strong><em>Se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt</em></strong>)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">Alala.carry &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">read.delim</span>(<span class="dt">file=</span><span class="st">&quot;Data.Alala.carry.txt&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>))</a></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">names</span>(Alala.carry)</a></code></pre></div>
 <pre><code>## [1] &quot;Name&quot;    &quot;Sex&quot;     &quot;Plant&quot;   &quot;carried&quot; &quot;given&quot;   &quot;carries&quot; &quot;Age&quot;</code></pre>
@@ -235,25 +236,218 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>##  [1] CHETR  CLEHA  COPRH  ILEAN  MYOSA  MYRLA  PIPAL  PITHO  PLEHA  PRISCb
 ## [11] PRISCg STYTA  TETHA  VACRE 
 ## 14 Levels: CHETR CLEHA COPRH ILEAN MYOSA MYRLA PIPAL PITHO PLEHA ... VACRE</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="co"># primera parte alala carry behavior, leer datos y crear un subset para la primera especie de planta Olapa (Cheirodendron trigynum)&quot;CHETR&quot;</span></a>
+<a class="sourceLine" id="cb9-2" title="2">Alala.carry &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">read.delim</span>(<span class="dt">file=</span><span class="st">&quot;Data.Alala.carry.txt&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>))</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="kw">names</span>(Alala.carry)</a></code></pre></div>
+<pre><code>## [1] &quot;Name&quot;    &quot;Sex&quot;     &quot;Plant&quot;   &quot;carried&quot; &quot;given&quot;   &quot;carries&quot; &quot;Age&quot;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">unique</span>(Alala.carry<span class="op">$</span>Plant)</a></code></pre></div>
+<pre><code>##  [1] CHETR  CLEHA  COPRH  ILEAN  MYOSA  MYRLA  PIPAL  PITHO  PLEHA  PRISCb
+## [11] PRISCg STYTA  TETHA  VACRE 
+## 14 Levels: CHETR CLEHA COPRH ILEAN MYOSA MYRLA PIPAL PITHO PLEHA ... VACRE</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">CHETR &lt;-<span class="st"> </span><span class="kw">subset</span>(Alala.carry, Plant<span class="op">==</span><span class="st"> &quot;CHETR&quot;</span>)</a></code></pre></div>
+<p>METER IMAGEN</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">#Regresión; </span></a>
+<a class="sourceLine" id="cb14-2" title="2">CHETR.glm &lt;-<span class="st"> </span><span class="kw">glm</span>(CHETR<span class="op">$</span>carries<span class="op">~</span><span class="st"> </span>CHETR<span class="op">$</span>Sex <span class="op">+</span><span class="st"> </span>CHETR<span class="op">$</span>Age,<span class="dt">weights=</span>CHETR<span class="op">$</span>given, <span class="dt">na.action =</span> na.fail)</a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="co">#Resumen de estadísticas</span></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="kw">summary</span>(CHETR.glm)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = CHETR$carries ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
+##     na.action = na.fail)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -0.33872  -0.24657  -0.08755  -0.02584   2.24534  
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)  0.08468    0.02881   2.939  0.00483 **
+## CHETR$Sex   -0.05699    0.02907  -1.961  0.05507 . 
+## CHETR$Age   -0.02102    0.02986  -0.704  0.48453   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for gaussian family taken to be 0.1787553)
+## 
+##     Null deviance: 10.3767  on 56  degrees of freedom
+## Residual deviance:  9.6528  on 54  degrees of freedom
+## AIC: -85.926
+## 
+## Number of Fisher Scoring iterations: 2</code></pre>
+<p>METER CUADRO SUMMARY</p>
 <p>Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento “na.action”. tuve que devolverme al glm y <strong><em>agregar glm(…, na.action = na.fail).</em></strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">CHETR.AIC &lt;-<span class="st"> </span><span class="kw">dredge</span>(CHETR.glm)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co">#Valores del AIC</span></a>
+<a class="sourceLine" id="cb18-2" title="2">CHETR.AIC</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = CHETR$carries ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
+##     na.action = na.fail)
+## ---
+## Model selection table 
+##     (Int)  CHE$Age  CHE$Sex df logLik  AICc delta weight
+## 3 0.07042          -0.05433  3 46.702 -87.0  0.00  0.478
+## 1 0.04297                    2 44.902 -85.6  1.37  0.241
+## 4 0.08468 -0.02102 -0.05699  4 46.963 -85.2  1.80  0.195
+## 2 0.05120 -0.01340           3 45.003 -83.6  3.40  0.087
+## Models ranked by AICc(x)</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="co">#estimados promediados del modelo </span></a>
+<a class="sourceLine" id="cb20-2" title="2">average.CHETR &lt;-<span class="st"> </span><span class="kw">model.avg</span>(<span class="kw">get.models</span>(CHETR.AIC, <span class="kw">seq</span>(<span class="kw">nrow</span>(CHETR.AIC))))</a>
+<a class="sourceLine" id="cb20-3" title="3">CHETR.Age &lt;-<span class="st"> </span>CHETR<span class="op">$</span>Age</a>
+<a class="sourceLine" id="cb20-4" title="4">CHETR.Sex &lt;-<span class="st"> </span>CHETR<span class="op">$</span>Sex</a></code></pre></div>
+<p>METER CUADRO AIC</p>
 <p>Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. <strong><em>Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el “method”</em></strong> así que lo eliminé.</p>
-<p>No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: <strong><em>Error in na.fail.default(list(<code>PITHO$germsucc</code> = c(0.428571429, 0.142857143, : missing values in object</em></strong> Esto sólo sucedió para PITHO.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="co"># modelos promediadios con los errores estandar</span></a>
+<a class="sourceLine" id="cb21-2" title="2">newdata.CHETR &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(CHETR.Age,CHETR.Sex))</a>
+<a class="sourceLine" id="cb21-3" title="3">pred.avg.CHETR &lt;-<span class="st"> </span><span class="kw">predict</span>(average.CHETR, newdata.CHETR,<span class="dt">se.fit=</span><span class="ot">TRUE</span>, <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb21-4" title="4">results.CHETR &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">cbind</span>(newdata.CHETR,pred.avg.CHETR<span class="op">$</span>fit,pred.avg.CHETR<span class="op">$</span>se.fit))</a></code></pre></div>
+<p>Por último se produce un archivo de texto para la tabla del AIC para poder leerla en excel <code>write.table(CHETR.AIC,&quot;EAT.CHETR.AIC.txt&quot;,sep=&quot;S&quot;, col.names=TRUE)</code></p>
+<p><em>Comportamiento de alimentación</em> (<strong><em>Acá igualmente se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt</em></strong>)</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">Alala.eat &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">read.delim</span>(<span class="dt">file=</span><span class="st">&quot;Data.Alala.eat.txt&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>));</a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="kw">names</span>(Alala.eat)</a></code></pre></div>
+<pre><code>## [1] &quot;Name&quot;  &quot;Sex&quot;   &quot;Plant&quot; &quot;eaten&quot; &quot;given&quot; &quot;eats&quot;  &quot;Age&quot;</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">unique</span>(Alala.eat<span class="op">$</span>Plant)</a></code></pre></div>
+<pre><code>##  [1] CHETR  CLEHA  COPRH  ILEAN  MYOSA  MYRLA  PIPAL  PITHO  PLEHA  PRISCb
+## [11] PRISCg STYTA  TETHA  VACRE 
+## 14 Levels: CHETR CLEHA COPRH ILEAN MYOSA MYRLA PIPAL PITHO PLEHA ... VACRE</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="co">#Se hace un supset como en el caso anterior para olapa</span></a>
+<a class="sourceLine" id="cb26-2" title="2">CHETR &lt;-<span class="st"> </span><span class="kw">subset</span>(Alala.eat, Plant<span class="op">==</span><span class="st"> &quot;CHETR&quot;</span>)</a>
+<a class="sourceLine" id="cb26-3" title="3"></a>
+<a class="sourceLine" id="cb26-4" title="4"><span class="co">#regresión</span></a>
+<a class="sourceLine" id="cb26-5" title="5">CHETR.glm &lt;-<span class="st"> </span><span class="kw">glm</span>(CHETR<span class="op">$</span>eats<span class="op">~</span><span class="st"> </span>CHETR<span class="op">$</span>Sex <span class="op">+</span><span class="st"> </span>CHETR<span class="op">$</span>Age,<span class="dt">weights=</span>CHETR<span class="op">$</span>given, <span class="dt">na.action =</span> na.fail)</a>
+<a class="sourceLine" id="cb26-6" title="6"><span class="co">#resumen de estadísticas:</span></a>
+<a class="sourceLine" id="cb26-7" title="7"><span class="kw">summary</span>(CHETR.glm)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = CHETR$eats ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
+##     na.action = na.fail)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -0.79609  -0.34629  -0.27488  -0.08327   3.14236  
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.20555    0.05319   3.865 0.000301 ***
+## CHETR$Sex   -0.06791    0.05367  -1.265 0.211161    
+## CHETR$Age   -0.11614    0.05513  -2.107 0.039798 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for gaussian family taken to be 0.6093781)
+## 
+##     Null deviance: 36.220  on 56  degrees of freedom
+## Residual deviance: 32.906  on 54  degrees of freedom
+## AIC: -16.02
+## 
+## Number of Fisher Scoring iterations: 2</code></pre>
+<p>Tablas del AIC y sus coeficientes.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">CHETR.AIC &lt;-<span class="st"> </span><span class="kw">dredge</span>(CHETR.glm)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">CHETR.AIC</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = CHETR$eats ~ CHETR$Sex + CHETR$Age, weights = CHETR$given, 
+##     na.action = na.fail)
+## ---
+## Model selection table 
+##     (Int) CHE$Age  CHE$Sex df logLik  AICc delta weight
+## 2 0.16570 -0.1071           3 11.177 -15.9  0.00  0.413
+## 4 0.20550 -0.1161 -0.06791  4 12.010 -15.3  0.65  0.298
+## 1 0.09988                   2  9.275 -14.3  1.57  0.188
+## 3 0.12680         -0.05320  3  9.758 -13.1  2.84  0.100
+## Models ranked by AICc(x)</code></pre>
+<p>Promediado del modelo y estimados promediados para cada uno de los coeficientes los estimados me dan información sobre las magnitudes de los efectos de edad y sexo</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">average.CHETR &lt;-<span class="st"> </span><span class="kw">model.avg</span>(<span class="kw">get.models</span>(CHETR.AIC, <span class="kw">seq</span>(<span class="kw">nrow</span>(CHETR.AIC))))</a>
+<a class="sourceLine" id="cb32-2" title="2">CHETR.Age &lt;-<span class="st"> </span>CHETR<span class="op">$</span>Age</a>
+<a class="sourceLine" id="cb32-3" title="3">CHETR.Sex &lt;-<span class="st"> </span>CHETR<span class="op">$</span>Sex</a>
+<a class="sourceLine" id="cb32-4" title="4"><span class="co">#Estimados del modelo promediados y Errores Estandar (EE)</span></a>
+<a class="sourceLine" id="cb32-5" title="5">newdata.CHETR &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(CHETR.Age,CHETR.Sex))</a>
+<a class="sourceLine" id="cb32-6" title="6">pred.avg.CHETR &lt;-<span class="st"> </span><span class="kw">predict</span>(average.CHETR, newdata.CHETR,<span class="dt">se.fit=</span><span class="ot">TRUE</span>, <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb32-7" title="7">results.CHETR &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">cbind</span>(newdata.CHETR,pred.avg.CHETR<span class="op">$</span>fit,pred.avg.CHETR<span class="op">$</span>se.fit))</a>
+<a class="sourceLine" id="cb32-8" title="8"><span class="co"># Al final tambien se crea un archivo de exel y así con cada una de las especies de plantas pra cada una de las tres partes</span></a></code></pre></div>
+<p>IMAGEN</p>
+<p>No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: <strong><em>Error in na.fail.default(list(<code>PITHO$germsucc</code> = c(0.428571429, 0.142857143, : missing values in object</em></strong> Esto sólo sucedió para PITHO. Continué con todas las demás especies de plantas.</p>
+<p><em>Germinación de semillas</em></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" title="1">Plant.germ &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">read.delim</span>(<span class="dt">file=</span><span class="st">&quot;Data.Plant.germ.txt&quot;</span>, <span class="dt">header=</span><span class="ot">TRUE</span>, <span class="dt">sep=</span><span class="st">&quot;</span><span class="ch">\t</span><span class="st">&quot;</span>));</a>
+<a class="sourceLine" id="cb33-2" title="2"><span class="co">#this tells you the names of the colums in your data base</span></a>
+<a class="sourceLine" id="cb33-3" title="3"><span class="kw">names</span>(Plant.germ)</a></code></pre></div>
+<pre><code>## [1] &quot;Rep&quot;      &quot;Plant&quot;    &quot;trt&quot;      &quot;trtnumb&quot;  &quot;germsucc&quot; &quot;planted&quot;</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="co">#lists all of the names of the plants</span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="kw">unique</span>(Plant.germ<span class="op">$</span>Plant)</a></code></pre></div>
+<pre><code>## [1] CHETR CLEHA COPRH PIPAL PITHO VACRE
+## Levels: CHETR CLEHA COPRH PIPAL PITHO VACRE</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1"><span class="co">#get a separate data set for only Olapa</span></a>
+<a class="sourceLine" id="cb37-2" title="2">CHETR &lt;-<span class="st"> </span><span class="kw">subset</span>(Plant.germ, Plant<span class="op">==</span><span class="st"> &quot;CHETR&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="co">#regression with variables in the order that they&#39;ll appear in the AIC table.</span></a>
+<a class="sourceLine" id="cb38-2" title="2">CHETRgerm.glm &lt;-<span class="st"> </span><span class="kw">glm</span>(CHETR<span class="op">$</span>germsucc<span class="op">~</span><span class="st"> </span>CHETR<span class="op">$</span>trt,<span class="dt">weights=</span>CHETR<span class="op">$</span>planted, <span class="dt">na.action =</span> na.fail)</a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="co">#stats for the regression</span></a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="kw">summary</span>(CHETRgerm.glm)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = CHETR$germsucc ~ CHETR$trt, weights = CHETR$planted, 
+##     na.action = na.fail)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.0445  -0.5271  -0.2228   0.5607   1.2083  
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)   
+## (Intercept)    0.21320    0.05528   3.857   0.0014 **
+## CHETR$trtfec   0.05592    0.08650   0.646   0.5271   
+## CHETR$trtpell  0.02170    0.08424   0.258   0.8000   
+## CHETR$trtwh   -0.15885    0.07955  -1.997   0.0631 . 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for gaussian family taken to be 0.6020049)
+## 
+##     Null deviance: 14.2627  on 19  degrees of freedom
+## Residual deviance:  9.6321  on 16  degrees of freedom
+## AIC: -16.032
+## 
+## Number of Fisher Scoring iterations: 2</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="co">#getting AIC tables and coefficients</span></a>
+<a class="sourceLine" id="cb40-2" title="2">CHETRgerm.AIC &lt;-<span class="st"> </span><span class="kw">dredge</span>(CHETRgerm.glm)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="co">#please show me those AIC values</span></a>
+<a class="sourceLine" id="cb42-2" title="2">CHETRgerm.AIC</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = CHETR$germsucc ~ CHETR$trt, weights = CHETR$planted, 
+##     na.action = na.fail)
+## ---
+## Model selection table 
+##    (Int) CHE$trt df logLik  AICc delta weight
+## 1 0.1856          2  9.090 -13.5  0.00  0.704
+## 2 0.2132       +  5 13.016 -11.7  1.73  0.296
+## Models ranked by AICc(x)</code></pre>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1"><span class="co">#De nuevo se crea un archivo de excel.</span></a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="co">#this is to do model averaging and get model averaged estimates of each of the coefficients-</span></a>
+<a class="sourceLine" id="cb45-2" title="2">average.CHETRgerm &lt;-<span class="st"> </span><span class="kw">model.avg</span>(<span class="kw">get.models</span>(CHETRgerm.AIC, <span class="kw">seq</span>(<span class="kw">nrow</span>(CHETRgerm.AIC))))</a>
+<a class="sourceLine" id="cb45-3" title="3">CHETRgerm.trt &lt;-<span class="st"> </span>CHETR<span class="op">$</span>trt</a>
+<a class="sourceLine" id="cb45-4" title="4"></a>
+<a class="sourceLine" id="cb45-5" title="5"><span class="co">#this is to get those averaged model estimates with the standard errors</span></a>
+<a class="sourceLine" id="cb45-6" title="6">newdata.CHETRgerm &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(<span class="kw">cbind</span>(CHETRgerm.trt))</a>
+<a class="sourceLine" id="cb45-7" title="7">pred.avg.CHETRgerm &lt;-<span class="st"> </span><span class="kw">predict</span>(average.CHETRgerm, newdata.CHETRgerm,<span class="dt">se.fit=</span><span class="ot">TRUE</span>, <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)</a>
+<a class="sourceLine" id="cb45-8" title="8">results.CHETRgerm &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">cbind</span>(newdata.CHETRgerm,pred.avg.CHETRgerm<span class="op">$</span>fit,pred.avg.CHETRgerm<span class="op">$</span>se.fit))</a></code></pre></div>
 </div>
-<div id="qué-cosas-están-en-los-materiales-suplementarios-i.e.-código-que-no-están-mencionadas-en-los-métodos-y-son-importantes-para-entender-el-análisis" class="section level5">
-<h5><strong>4.</strong> ¿Qué cosas están en los materiales suplementarios (i.e. código) que no están mencionadas en los métodos y son importantes para entender el análisis?</h5>
+<div id="qué-cosas-están-en-los-materiales-suplementarios-que-no-están-mencionadas-en-los-métodos-y-son-importantes-para-entender-el-análisis" class="section level5">
+<h5><strong>4.</strong> ¿Qué cosas están en los materiales suplementarios que no están mencionadas en los métodos y son importantes para entender el análisis?</h5>
+<p>código figuras</p>
 </div>
 <div id="qué-cosas-están-en-los-métodos-que-no-encontraron-en-el-código" class="section level5">
 <h5><strong>5.</strong> ¿Qué cosas están en los métodos que no encontraron en el código?</h5>
+<p>el orden de cada uno de los experimentos los detalles</p>
 </div>
 <div id="características-del-artículo-yo-materiales-suplementarios-que-dificultaron-la-reproducción" class="section level5">
 <h5><strong>6.</strong> Características del artículo y/o materiales suplementarios que dificultaron la reproducción</h5>
+<p>Artículo del 2008 Los paquetes han cambiado (Muy poco) no incluye el código para las figuras</p>
 </div>
 <div id="características-del-artículo-yo-materiales-suplementarios-que-facilitaron-la-reproducción" class="section level5">
 <h5><strong>7.</strong> Características del artículo y/o materiales suplementarios que facilitaron la reproducción</h5>
+<p>El código está muy bien explicado Código en M Word, se puede copiar y pegar Los métodos son muy claros</p>
 </div>
 <div id="considera-que-el-análisis-de-datos-es-reproducible" class="section level5">
 <h5><strong>8.</strong> ¿Considera que el análisis de datos es reproducible?</h5>
-<p>Acá pueden acceder al <a href="https://github.com/MolinaIngrid/Reproduccion_Culliney_2012">Repositorio en github</a></p>
+<p>Sí! si bien tuve algunos inconvenientes por los cambios en los paquetes estos no me impidieron obtener resultados muy similares a los de las investigadoras originales. Aún así creo que el código para hacer las figuras debería de incluirse así como incluyeron el código para los análisis. No entendí por qué utilizaban excel para exportar los resultados de cada análisis y sospecho que puede ser que estuvieran usando otros programas para hacer cuadros y gráficos y no R (lo cual sería extraño pero lo entiendo). Finalmente creo que a pesar de ser un artículo públicado hace 12 años tenían muy claro que hacer para que una tercera persona pudiera comprender, revisar y reproducir el estudio usando sus mismos datos.</p>
+<p><strong>Acá pueden acceder a mi</strong> <a href="https://github.com/MolinaIngrid/Reproduccion_Culliney_2012">Repositorio en github</a> donde están todos los resultados para cada una de las especies de plantas y todo el código y archivos, imágenes etc. relacionados a este trabajo.</p>
 <p><em>información de la sesión</em></p>
 <pre><code>## R version 3.6.1 (2019-07-05)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
