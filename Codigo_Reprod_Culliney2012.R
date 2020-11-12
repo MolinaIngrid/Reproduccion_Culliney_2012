@@ -16,6 +16,7 @@ summary(CHETR.glm)
 CHETR.AIC <- dredge(CHETR.glm)
 #Valores del AIC
 CHETR.AIC
+write.table(CHETR.AIC,"CARRY.CHETR.AIC.txt",sep="S", col.names=TRUE)
 
 #estimados promediados del modelo 
 average.CHETR <- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
@@ -28,9 +29,9 @@ newdata.CHETR <- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
 pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="response")
 results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
 
-plot(results.CHETRgerm,CHETR.Sex)
+results.CHETR
 
-#archivo de texto 
+#Generar un archivo de texto 
 write.table(results.CHETR,"CARRY.results.CHETR.txt",sep="S", col.names=TRUE)
 
 #OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU OHAKEPAU

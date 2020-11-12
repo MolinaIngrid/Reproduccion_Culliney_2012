@@ -1,13 +1,13 @@
 ---
 title: "Reproducion_Culliney_2012"
 author: "Ingrid Molina Mora"
-date: "26/10/2020"
+date: "12/11/2020"
 output:
   prettydoc::html_pretty:
-    theme: leonids
+    theme: hpstr
     highlight: vignette
 vignette: >
-  %\VignetteIndexEntry{Creating Pretty Documents from R Markdown - The Leonids Theme}
+  %\VignetteIndexEntry{Creating Pretty Documents from R Markdown - The HPSTR Theme}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 
@@ -42,7 +42,18 @@ y dispersión de semillas; y **(3)** si la ingestión de Alala da como resultado
 
 ##### **2 ¿Qué parte del análisis se reprodujo y porqué?**
 
-reproduje las 3 partes del análisis porque en este caso el artículo brindaba un link a el set de datos y a tres documentos de word donde el código estaba bien explicado
+Reproduje las 3 partes del análisis porque en este caso el artículo brindaba un link al [Repositorio en Figshare](https://figshare.com/collections/Seed_dispersal_by_a_captive_corvid_the_role_of_the_Alal_i_Corvus_hawaiiensis_i_in_shaping_Hawai_i_s_plant_communities/3295529) donde estaba el set de datos y tres documentos de word donde el código estaba bien explicado (Había en principio un enlace a scrips de R pero estaban vacíos)
+
+
+Usamos logistica
+regresión para modelar la proporción de veces que
+aves observadas comiendo cada planta y llevando cada planta
+en función de la edad y el sexo, ponderado por el número de
+veces que le dimos cada especie de planta a cada ave. Nosotros
+analizó los datos de germinación mediante regresión logística para
+modelar la proporción de semillas germinadas en función
+del grupo de tratamiento, ponderado por el número de semillas en
+ese grupo.
 
 ##### **3 Código y resultados** 
 
@@ -57,9 +68,10 @@ Antes de cargar library(betareg)  hay que instalar primero el paquete betareg  u
 ```{r}
 library(betareg)
 ```
-Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. Decidí continuar y crear el objeto Alala.carry 
+Esta es una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 y además Mi versión de R es 3.6.1. mientras que la de ellas era la R version 2.13.0.  Decidí continuar:
 
-*Comportamiento de forrajeo y dispersión de semillas*
+#### *Comportamiento de forrajeo y dispersión de semillas*
+
 (***Se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt***)
 
 
@@ -79,7 +91,6 @@ unique(Alala.carry$Plant)
 CHETR <- subset(Alala.carry, Plant== "CHETR")
 ```
 
-METER IMAGEN
 
 ```{r}
 #Regresión; 
@@ -88,7 +99,6 @@ CHETR.glm <- glm(CHETR$carries~ CHETR$Sex + CHETR$Age,weights=CHETR$given, na.ac
 summary(CHETR.glm)
 ```
 
-METER CUADRO SUMMARY
 
 Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dredge no aceptaba el argumento "na.action". tuve que devolverme al glm y ***agregar glm(..., na.action = na.fail).***
 
@@ -96,7 +106,14 @@ Tablas del AIC y sus coeficientes. Acá obtenía un error porque la función dre
 CHETR.AIC <- dredge(CHETR.glm)
 #Valores del AIC
 CHETR.AIC
+```
+`write.table(CHETR.AIC,"CARRY.CHETR.AIC.txt",sep="S", col.names=TRUE)`
 
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/carry.aic.jpg)
+
+
+```{r}
 #estimados promediados del modelo 
 average.CHETR <- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
 CHETR.Age <- CHETR$Age
@@ -104,7 +121,6 @@ CHETR.Sex <- CHETR$Sex
 
 ```
 
-METER CUADRO AIC
 
 Para promediar el modelo y obtener los estimados promediados del modelo para cada uno de los coeficientes. ***Hubo un error por el código original ya que la función model.avg ha tenido cambios y no requiere especificar el "method"*** así que lo eliminé.
 
@@ -114,14 +130,21 @@ Para promediar el modelo y obtener los estimados promediados del modelo para cad
 newdata.CHETR <- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
 pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="response")
 results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
-
+results.CHETR
 ```
 
-Por último se produce un archivo de texto para la tabla del AIC para poder leerla en excel
-`write.table(CHETR.AIC,"EAT.CHETR.AIC.txt",sep="S", col.names=TRUE)`
+Por último se produce un archivo de texto de los resultados de las estimaciones promediadas para poder leerlas en excel
+`write.table(results.CHETR,"CARRY.results.CHETR.txt",sep="S", col.names=TRUE)` OJO El delimitador es "S", se ve así:
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/carry.results.jpg)
+
+y es igual a los resultados del artículo
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/Carry.jpg)
 
 
-*Comportamiento de alimentación*
+#### *Comportamiento de alimentación*
+
 (***Acá igualmente se debe cambiar de nombre porque es distinto en el word que proveen que en los archivos txt***)
 
 ```{r} 
@@ -146,7 +169,7 @@ CHETR.AIC <- dredge(CHETR.glm)
 CHETR.AIC
 ```
 
-Promediado del modelo y estimados promediados para cada uno de los coeficientes los estimados me dan información sobre las magnitudes de los efectos de edad y sexo 
+Promediando del modelo y estimados promediados para cada uno de los coeficientes los estimados me dan información sobre las magnitudes de los efectos de edad y sexo 
 
 ```{r}
 average.CHETR <- model.avg(get.models(CHETR.AIC, seq(nrow(CHETR.AIC))))
@@ -156,84 +179,86 @@ CHETR.Sex <- CHETR$Sex
 newdata.CHETR <- as.data.frame(cbind(CHETR.Age,CHETR.Sex))
 pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="response")
 results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
-# Al final tambien se crea un archivo de exel y así con cada una de las especies de plantas pra cada una de las tres partes
+# Al final tambien se crea un archivo de exel y así con cada una de las especies de plantas para cada una de las tres partes
 ```
-IMAGEN
 
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/eating.jpg)
 
 No encontré más errores ni obstaculos en la parte 1 (Alala carry behavior) ni en la parte 2 (Alala eat behavior), Sin embargo al llegar a la parte 3 (Plant Germination) obtuve un error: ***Error in na.fail.default(list(`PITHO$germsucc` = c(0.428571429, 0.142857143, : missing values in object*** Esto sólo sucedió para PITHO. Continué con todas las demás especies de plantas.
 
-*Germinación de semillas*
+#### *Germinación de semillas*
 
 
 ```{r}
 Plant.germ <- as.data.frame(read.delim(file="Data.Plant.germ.txt", header=TRUE, sep="\t"));
-#this tells you the names of the colums in your data base
 names(Plant.germ)
-
-#lists all of the names of the plants
 unique(Plant.germ$Plant)
 
-#get a separate data set for only Olapa
+#datos para solo Olapa
 CHETR <- subset(Plant.germ, Plant== "CHETR")
 ```
 
+Regresión (con las variables en el orden que aparecerán en el AIC)
+
 ```{r}
-#regression with variables in the order that they'll appear in the AIC table.
+
 CHETRgerm.glm <- glm(CHETR$germsucc~ CHETR$trt,weights=CHETR$planted, na.action = na.fail)
-#stats for the regression
 summary(CHETRgerm.glm)
 
 ```
 
-
+Generando el AIC
 ```{r}
-#getting AIC tables and coefficients
 CHETRgerm.AIC <- dredge(CHETRgerm.glm)
-#please show me those AIC values
 CHETRgerm.AIC
 #De nuevo se crea un archivo de excel.
 ```
 
+Promediando del modelo y los estimados promediados para cada uno de los coeficientes y sus EE
+
 ```{r}
-#this is to do model averaging and get model averaged estimates of each of the coefficients-
 average.CHETRgerm <- model.avg(get.models(CHETRgerm.AIC, seq(nrow(CHETRgerm.AIC))))
 CHETRgerm.trt <- CHETR$trt
 
-#this is to get those averaged model estimates with the standard errors
 newdata.CHETRgerm <- as.data.frame(cbind(CHETRgerm.trt))
 pred.avg.CHETRgerm <- predict(average.CHETRgerm, newdata.CHETRgerm,se.fit=TRUE, type="response")
 results.CHETRgerm <- unique(cbind(newdata.CHETRgerm,pred.avg.CHETRgerm$fit,pred.avg.CHETRgerm$se.fit))
+
+results.CHETRgerm
+
+# y finalmente el último archivo en excel
 ```
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/germinacion.jpg)
 
 
 ##### **4.** ¿Qué cosas están en los materiales suplementarios que no están mencionadas en los métodos y son importantes para entender el análisis?
 
- código 
- figuras
+- código 
+- figuras
 
 ##### **5.** ¿Qué cosas están en los métodos que no encontraron en el código?
 
- el orden de cada uno de los experimentos 
- los detalles 
+- el orden de cada uno de los experimentos 
+- los detalles 
 
 ##### **6.** Características del artículo y/o materiales suplementarios que dificultaron la reproducción
 
-  Artículo del 2008
-  Los paquetes han cambiado (Muy poco)
-  no incluye el código para las figuras
+- Artículo del 2012
+- Los paquetes han cambiado (Muy poco)
+- no incluye el código para las figuras
   
 
 ##### **7.** Características del artículo y/o materiales suplementarios que facilitaron la reproducción
   
-  El código está muy bien explicado 
-  Código en M Word, se puede copiar y pegar
-  Los métodos son muy claros 
+- El código está muy bien explicado 
+- Código en M Word, se puede copiar y pegar
+- Los métodos son muy claros 
   
 
 ##### **8.** ¿Considera que el análisis de datos es reproducible? 
 
-  Sí! si bien tuve algunos inconvenientes por los cambios en los paquetes estos no me impidieron obtener resultados muy similares a los de las investigadoras originales. Aún así creo que el código para hacer las figuras debería de incluirse así como incluyeron el código para los análisis. No entendí por qué utilizaban excel para exportar los resultados de cada análisis y sospecho que puede ser que estuvieran usando otros programas para hacer cuadros y gráficos y no R (lo cual sería extraño pero lo entiendo). Finalmente creo que a pesar de ser un artículo públicado hace 12 años tenían muy claro que hacer para que una tercera persona pudiera comprender, revisar y reproducir el estudio usando sus mismos datos. 
+  Sí! si bien tuve algunos inconvenientes por los cambios en los paquetes estos no me impidieron obtener resultados muy similares a los de las investigadoras originales. Aún así creo que el código para hacer las figuras debería de incluirse así como incluyeron el código para los análisis. No entendí por qué utilizaban excel para exportar los resultados de cada análisis y sospecho que puede ser que estuvieran usando otros programas para hacer cuadros y gráficos y no R (lo cual sería extraño pero lo entiendo). Finalmente, aunque el artículo fue públicado hace 8 años era muy claro de reproducir para que una tercera persona, más que muchos artículos más nuevos. 
 
 **Acá pueden acceder a mi** 
 [Repositorio en github](https://github.com/MolinaIngrid/Reproduccion_Culliney_2012) donde están todos los resultados para cada una de las especies de plantas y todo el código y archivos, imágenes etc. relacionados a este trabajo.
