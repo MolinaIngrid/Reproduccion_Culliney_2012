@@ -17,17 +17,14 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## **"Seed dispersal by a captive corvid: the role of the Alala (Corvus hawaiiensis) in shaping Hawaii’s plant communities"** 
+## **"Seed dispersal by a captive corvid: the role of the Alala (** *Corvus hawaiiensis* **) in shaping Hawaii’s plant communities"** 
+
+### (spoiler) *¡Una Reproducción de Artículo Éxitosa!*   
 
 
-### *Curso de Estrategias para la investigación reproducible II Semestre 2020 UCR* 
-### *Proyecto de Reproducción de Artículo*
-### **¡Un caso de ÉXITO!**
+##### **1.** ¿Qué es lo que investiga el artículo
 
-
-##### **1. ¿Qué es lo que investiga el artículo**
-
-Este artículo de 2012 documentó el potencial del papel del cuervo hawaiano Alala en el mantenimiento y restauración de los bosques de Hawái a través de la dispersión de semillas. 
+Este artículo de 2012 documentó el papel potencial del cuervo hawaiano Alala en el mantenimiento y restauración de los bosques de Hawái a través de la dispersión de semillas. 
 
 <div style="text-align: center">
 
@@ -46,7 +43,7 @@ y dispersión de semillas; y **(3)** si la ingestión de Alala da como resultado
 
 ![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/recintos.alala.jpg)
 
-##### **2 ¿Qué parte del análisis se reprodujo y porqué?**
+##### **2**   ¿Qué parte del análisis se reprodujo y porqué?
 
 Reproduje las 3 partes del análisis porque en este caso el artículo brindaba un link al [Repositorio en Figshare](https://figshare.com/collections/Seed_dispersal_by_a_captive_corvid_the_role_of_the_Alal_i_Corvus_hawaiiensis_i_in_shaping_Hawai_i_s_plant_communities/3295529) donde estaba el set de datos y tres documentos de word donde el código estaba bien explicado (Había en principio un enlace a scrips de R pero estaban vacíos)
 
@@ -62,13 +59,13 @@ ese grupo.
 
 Veremos entonces:
 
--Sexo: Macho Hembra
--Edad: Juvenil Adulto
--Observaciones: Carry Eating
--4 tratamientos para Germinación: A mano, Cuitas, Pellets, Fruto entero
--Especies de plantas: 14. (*Acá presentaré el código y resultados para 1 especie*)
+- Sexo: Macho, Hembra
+- Edad: Juvenil, Adulto
+- Observaciones: Carry, Eating
+- 4 tratamientos para Germinación: A mano, Cuitas, Pellets, Fruto entero
+- Especies de plantas: 14 (*Acá presentaré el código y resultados para 1 especie*)
 
-##### **3 Código y resultados** 
+##### **3** Código y resultados 
 
  
    -Cargo las librerías MuMIn  y Betareg (Antes asegurarnos de que los paquetes están instalados) 
@@ -247,6 +244,18 @@ results.CHETRgerm
 ```
 
 ![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/germinacion.jpg)
+
+**Resultados generales del artículo**
+Los Alalas comieron y llevaron las 14 frutas en
+este estudio, incluidos las de loulu y halapepe, dos
+plantas en peligro de extinción de las que se desconocen los
+dispersores actualmente. Los resultados indican que h¯o‘awa se basa
+totalmente en la ingestión o manipulación de Alal¯a para la germinación,
+y que la germinación de ‘¯ohelo y‘ oha
+k¯epau se incrementó por la ingestión de los Alalas,
+en comparación con las semillas de frutos enteros. Estos hallazgos
+sugieren que Alala fue una vez un importante dispersor de semillas
+en bosques mésicos y secos en la isla grande de Hawái.
 
 
 ##### **4.** ¿Qué cosas están en los materiales suplementarios que no están mencionadas en los métodos? 
