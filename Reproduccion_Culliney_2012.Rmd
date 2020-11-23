@@ -77,7 +77,7 @@ library(MuMIn)
 library(betareg)
 ```
 
-Yo tuve que instalar el paquete Betareg en una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012, además Mi versión de R es 3.6.1. mientras que la de ellas era la R version 2.13.0.  
+Yo tuve que instalar el paquete Betareg en una versión del paquete mucho más nueva que la utilizada por las investigadoras en 2012 (Obtenía un Warning al respecto pero esto podría evitarse utilizado el sistema **packrat**), además Mi versión de R es 3.6.1. mientras que la de ellas era la R version 2.13.0.  
 Decidí continuar:
 
 #### *Comportamiento de forrajeo y dispersión de semillas*
@@ -195,6 +195,10 @@ pred.avg.CHETR <- predict(average.CHETR, newdata.CHETR,se.fit=TRUE, type="respon
 results.CHETR <- unique(cbind(newdata.CHETR,pred.avg.CHETR$fit,pred.avg.CHETR$se.fit))
 # Al final tambien se crea un archivo de exel y así con cada una de las especies de plantas para cada una de las tres partes
 ```
+El gráfico hecho en excel con los resultados obtenido fue igual al del artículo.
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/eat.graf.jpg)
+
 
 ![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/eating.jpg)
 
@@ -240,8 +244,12 @@ results.CHETRgerm <- unique(cbind(newdata.CHETRgerm,pred.avg.CHETRgerm$fit,pred.
 
 results.CHETRgerm
 
-# y finalmente el último archivo en excel
+# y finalmente el último archivo txt para leer en excell en excel
 ```
+El gráfico hecho en excel con los resultados obtenido fue igual al del artículo.
+
+![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/germ.graf.jpg)
+
 
 ![](C:/Users/in/Documents/MAESTRIA/Cursos/Estrategias/replica/germinacion.jpg)
 
